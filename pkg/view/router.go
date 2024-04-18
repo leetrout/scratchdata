@@ -23,6 +23,10 @@ func MountRoutes(
 	destManager *destinations.DestinationManager,
 	auth func(h http.Handler) http.Handler,
 ) error {
+	if c.CSRFSecret == "" {
+		panic("missing secret")
+	}
+	fmt.Printf("\n\n\n HERE WE GO %s \n\n\n", c.CSRFSecret)
 	csrfMiddleware := csrf.Protect([]byte(c.CSRFSecret))
 	sessionStore := sessions.NewCookieStore([]byte(c.CSRFSecret))
 

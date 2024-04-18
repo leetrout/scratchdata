@@ -11,7 +11,7 @@ import (
 func NewStaticDatabase(conf config.Database, destinations []config.Destination, apiKeys []config.APIKey) (*gorm.Gorm, error) {
 	ctx := context.TODO()
 
-	defaultSettings := gorm.Gorm{DSN: "file::memory:?cache=shared"}
+	defaultSettings := gorm.Gorm{DSN: "file::app.db:?cache=shared"}
 	defaultSettingsMap := map[string]any{}
 	mapstructure.Decode(&defaultSettings, &defaultSettingsMap)
 

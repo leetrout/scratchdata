@@ -2,17 +2,14 @@ package api
 
 import (
 	"context"
-	"io"
 	"net/http"
 	"strconv"
 	"time"
 
 	"github.com/go-chi/jwtauth/v5"
-	"github.com/google/uuid"
 	"github.com/jellydator/ttlcache/v3"
 	"github.com/rs/zerolog/log"
 	"github.com/scratchdata/scratchdata/pkg/storage/database/models"
-	"github.com/tidwall/gjson"
 )
 
 func UserFromContext(c context.Context) (*models.User, bool) {
@@ -81,8 +78,8 @@ func (a *ScratchDataAPIStruct) AuthGetTeamID(ctx context.Context) uint {
 }
 
 func (a *ScratchDataAPIStruct) Login(w http.ResponseWriter, r *http.Request) {
-	url := a.googleOauthConfig.AuthCodeURL(uuid.New().String())
-	http.Redirect(w, r, url, http.StatusTemporaryRedirect)
+	// url := a.googleOauthConfig.AuthCodeURL(uuid.New().String())
+	// http.Redirect(w, r, "/foo", http.StatusTemporaryRedirect)
 }
 
 func (a *ScratchDataAPIStruct) Authenticator() func(http.Handler) http.Handler {
@@ -145,28 +142,28 @@ func (a *ScratchDataAPIStruct) Logout(w http.ResponseWriter, r *http.Request) {
 
 func (a *ScratchDataAPIStruct) OAuthCallback(w http.ResponseWriter, r *http.Request) {
 	// state := r.FormValue("state")
-	code := r.FormValue("code")
-	log.Print(code)
+	// code := r.FormValue("code")
+	// log.Print(code)
 
-	token, err := a.googleOauthConfig.Exchange(r.Context(), code)
-	if err != nil {
-		log.Error().Err(err).Msg("Unable to exchange code for token")
-		return
-	}
-	resp, err := a.googleOauthConfig.Client(r.Context(), token).Get("https://www.googleapis.com/oauth2/v3/userinfo")
-	if err != nil {
-		log.Error().Err(err).Msg("Unable to get user info")
-		return
-	}
-	defer resp.Body.Close()
-	data, err := io.ReadAll(resp.Body)
-	if err != nil {
-		log.Error().Err(err).Msg("Unable to read response body")
-		return
-	}
+	// token, err := a.googleOauthConfig.Exchange(r.Context(), code)
+	// if err != nil {
+	// 	log.Error().Err(err).Msg("Unable to exchange code for token")
+	// 	return
+	// }
+	// resp, err := a.googleOauthConfig.Client(r.Context(), token).Get("https://www.googleapis.com/oauth2/v3/userinfo")
+	// if err != nil {
+	// 	log.Error().Err(err).Msg("Unable to get user info")
+	// 	return
+	// }
+	// defer resp.Body.Close()
+	// data, err := io.ReadAll(resp.Body)
+	// if err != nil {
+	// 	log.Error().Err(err).Msg("Unable to read response body")
+	// 	return
+	// }
 
-	email := gjson.GetBytes(data, "email").String()
-	user, err := a.storageServices.Database.CreateUser(email, "google", string(data))
+	// email := gjson.GetBytes(data, "email").String()
+	user, err := a.storageServices.Database.CreateUser("lee@leetrout.com", "google", string(""))
 
 	if err != nil {
 		log.Error().Err(err).Msg("Unable to create user")
